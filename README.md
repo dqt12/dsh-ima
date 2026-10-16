@@ -71,15 +71,40 @@
 - 已安装 DeepSeek Harness（下文以 `~/.dsh` 为其 home 目录）
 - Node.js ≥ 18
 
-### 方式一：clone 到插件目录（推荐）
+### 方式一：一行命令（推荐）
+
+把 `web` 换成你要装的 profile 名即可（桌面端用 `desktop`）。
+
+**从预构建包安装** —— 最快，不需要 git，也不需要本地构建：
+
+```bash
+dsh plugin --profile web add https://github.com/ikevss/dsh-ima/releases/latest/download/dsh-ima.tgz
+```
+
+**从源码安装**：
+
+```bash
+dsh plugin --profile web add git+https://github.com/ikevss/dsh-ima.git
+```
+
+装完**重启 DSH**（Web 端也可以只重启服务后刷新页面）。
+
+> ⚠️ **不要写成 `github:ikevss/dsh-ima`。** npm 会把 `github:` 这种简写解析成 **SSH** 地址（`ssh://git@github.com/...`），没配过 SSH key 的机器会直接报
+> `Permission denied (publickey)` 装不上。要让人人都能装，必须用上面的 `git+https://` 形式或 tarball 链接。
+
+> 💡 预构建 tarball 里已经包含编译好的 `lib/client.js`，所以安装时不会触发构建；从源码装也一样，`lib/` 是随仓库提交的。
+
+### 方式二：手动安装（改 profile 配置）
+
+适合想改代码、或者网络环境装不了包的情况。
+
+**1. clone 到插件目录**
 
 ```bash
 git clone https://github.com/ikevss/dsh-ima.git ~/.dsh/plugins/dsh-ima
 ```
 
-然后把插件挂到你的 profile 上。以 `web` 为例：
-
-**1. `~/.dsh/profiles/web/package.json`** —— 加依赖和 bundle：
+**2. `~/.dsh/profiles/web/package.json`** —— 加依赖和 bundle：
 
 ```jsonc
 {
@@ -97,7 +122,7 @@ git clone https://github.com/ikevss/dsh-ima.git ~/.dsh/plugins/dsh-ima
 }
 ```
 
-**2. `~/.dsh/profiles/web/cordis.patch.yml`** —— 文件末尾加一段：
+**3. `~/.dsh/profiles/web/cordis.patch.yml`** —— 文件末尾加一段：
 
 ```yaml
 - insert:
@@ -105,7 +130,7 @@ git clone https://github.com/ikevss/dsh-ima.git ~/.dsh/plugins/dsh-ima
       name: dsh-ima
 ```
 
-**3. 把插件文件拷进 profile 的 node_modules**（不要用 `pnpm add`，容易搞坏 profile 的依赖解析）：
+**4. 把插件文件拷进 profile 的 node_modules**（不要用 `pnpm add`，容易搞坏 profile 的依赖解析）：
 
 ```bash
 mkdir -p ~/.dsh/profiles/web/node_modules/dsh-ima
@@ -113,11 +138,18 @@ cp ~/.dsh/plugins/dsh-ima/{package.json,cordis.patch.yml} ~/.dsh/profiles/web/no
 cp ~/.dsh/plugins/dsh-ima/lib/*.js ~/.dsh/profiles/web/node_modules/dsh-ima/lib/
 ```
 
-**4. 重启 DSH。**
+**5. 重启 DSH。**
 
 ### 桌面端（DeepSeek Harness Desktop）
 
-同样三步，只是 profile 目录换成 `~/.dsh/profiles/desktop`：
+把上面的 `web` 全部换成 `desktop` 即可：
+
+```bash
+# 一行命令方式
+dsh plugin --profile desktop add https://github.com/ikevss/dsh-ima/releases/latest/download/dsh-ima.tgz
+```
+
+手动方式同样三步，只是 profile 目录换成 `~/.dsh/profiles/desktop`：
 
 ```bash
 # 1. 改 ~/.dsh/profiles/desktop/package.json（加 dependencies + bundles，同上）
@@ -129,6 +161,22 @@ cp ~/.dsh/plugins/dsh-ima/lib/*.js ~/.dsh/profiles/desktop/node_modules/dsh-ima/
 ```
 
 > ⚠️ desktop profile 由桌面端独占管理，命令行 `dsh --profile desktop` 会拒绝启动——这是正常的。
+
+## 它访问什么（权限说明）
+
+装之前你大概想知道它碰了什么。全部如实列出：
+
+| 项 | 说明 |
+|---|---|
+| **访问的域名** | 只有 `https://ima.qq.com`（腾讯 ima 官方 OpenAPI）。预览/下载文件时用的是 ima 接口返回的腾讯云 COS 签名直链 |
+| **读取的本地文件** | `~/.dsh/storages/dsh-ima/credentials.json`（插件自己的凭证）；取不到时回退读 `~/.config/ima/{client_id,api_key}`（ima 官方技能的标准位置）。除这两个位置外不读任何本地文件 |
+| **写入的本地文件** | 只在 `~/.dsh/storages/dsh-ima/` 下写凭证与绑定用的浏览器 profile；**不碰 `~/.config/ima/`**（那是 ima 自己技能的资产，解绑只用标记文件） |
+| **启动的进程** | 仅「一键绑定」时会拉起你本机的 Chrome / Edge，带 `--remote-debugging-port=9333`（只监听 `127.0.0.1`），用完即关 |
+| **本机 HTTP 路由** | `/api/ima/*`，由 DSH 的 webServer 提供，与 DSH 面板同源。之所以要这层中转，是因为 ima 的接口不返回 CORS 头，浏览器不能直连 |
+| **安装期脚本** | **没有**。`package.json` 里没有 `postinstall`/`prepare`，装的时候不会执行任何脚本 |
+| **遥测 / 上报** | **没有**。不收集、不上传任何数据到第三方；除了上面那个域名不连任何服务器 |
+
+> 想自己核对：`grep -rn "https://" lib/index.js lib/ima-client.js`，宿主半只有 `ima.qq.com` 一个外部地址。
 
 ## 绑定 ima 账号
 
