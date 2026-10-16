@@ -1,0 +1,62 @@
+{
+  "name": "dsh-ima",
+  "version": "1.6.0",
+  "description": "腾讯 ima 知识库接入 DeepSeek Harness：侧边栏浏览知识库与文件，并让 agent 自动检索、调用库内文件",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ikevssy/dsh-ima.git"
+  },
+  "homepage": "https://github.com/ikevssy/dsh-ima",
+  "bugs": {
+    "url": "https://github.com/ikevssy/dsh-ima/issues"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "ima",
+    "knowledge-base",
+    "plugin",
+    "tencent"
+  ],
+  "author": "ikevssy",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ],
+      "platform": "web"
+    }
+  },
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": "./lib/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "build",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node build/build.mjs",
+    "test": "node test/smoke.js"
+  },
+  "devDependencies": {
+    "@open-file-viewer/core": "1.0.0",
+    "esbuild": "^0.24.0"
+  }
+}
