@@ -1,6 +1,6 @@
 {
   "name": "dsh-ima",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "腾讯 ima 知识库接入 DeepSeek Harness：侧边栏浏览知识库与文件，并让 agent 自动检索、调用库内文件",
   "main": "lib/index.js",
   "repository": {
