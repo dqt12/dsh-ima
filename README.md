@@ -29,7 +29,44 @@
 | Agent 工具 | 5 个工具，含**按正文内容搜索** |
 | 上下文注入 | 模型每轮自动看到知识库清单，主动去查 |
 
+## 界面预览
+
+> 以下截图为**演示数据**（虚构的库名与文件名），实际界面与之一致。
+
+左侧浏览知识库，右侧文件按类型显示彩色徽章；网页 / 微信文章直接「打开原文」，文档类一键「引用到对话」：
+
+![知识库面板](docs/screenshots/shot-1-panel.png)
+
+一键绑定：自动弹出浏览器登录 ima，其余全自动：
+
+![一键绑定](docs/screenshots/shot-2-bind.png)
+
+详情页右上角「引用到对话」——把当前文件直接交给 agent 读取：
+
+![详情页与引用按钮](docs/screenshots/shot-3-detail.png)
+
+没有 Chrome/Edge 时的手动兜底（每一步都告诉你去哪拿、怎么拿）：
+
+![手动填写兜底](docs/screenshots/shot-4-manual.png)
+
+## 环境与版本适配
+
+| 项目 | 要求 | 说明 |
+|---|---|---|
+| DeepSeek Harness | **0.2.0-rc.1** | 开发与测试所用的版本；0.2.x 其他小版本理论兼容，未逐一验证 |
+| Node.js | ≥ 18（推荐 ≥ 22） | 宿主半要求；绑定自动化用到 Node 内置 WebSocket，22 起零依赖 |
+| 浏览器 | Chrome 或 Edge | 仅「一键绑定」需要；都没有会自动降级为手动填写方式 |
+| 操作系统 | Windows / macOS / Linux | 宿主半为纯 Node 实现，无原生模块依赖 |
+| ima 账号 | 能登录 [ima.qq.com](https://ima.qq.com) 即可 | 订阅类知识库 ima 不开放读取（产品策略，见「已知边界」） |
+
+> DSH 的插件接口在 0.2.x 阶段仍在演进。升级 DSH 后如果插件异常，欢迎[提 issue](https://github.com/ikevss/dsh-ima/issues)，附上 DSH 版本号即可。
+
 ## 安装
+
+### 前置条件
+
+- 已安装 DeepSeek Harness（下文以 `~/.dsh` 为其 home 目录）
+- Node.js ≥ 18
 
 ### 方式一：clone 到插件目录（推荐）
 
@@ -186,6 +223,15 @@ npm test             # ima-client 冒烟测试
 | API Key | 有效期一年，到期需重新绑定 |
 | 桌面端 | 插件支持，但 desktop profile 由桌面端独占管理 |
 
+## 更新日志
+
+| 版本 | 要点 |
+|---|---|
+| 1.6.0 | 按正文内容搜索（`ima_search_files`）、agent 上下文注入、开源发布 |
+| 1.5.0 | 一键绑定产品化：CDP 浏览器自动化 + 四级兜底 + 手动路径自解释 |
+| 1.3.0 | 内置 open-file-viewer 纯前端预览（替代在线预览，国内可用） |
+| 1.0.0 | 首个可用版本：侧边栏浏览 + 基础 agent 工具 |
+
 ## 致谢
 
 - [open-file-viewer](https://github.com/xushanpei/open-file-viewer) —— 提供纯前端文档预览能力
@@ -204,6 +250,8 @@ npm test             # ima-client 冒烟测试
 - **Full-text search** — ask "does anything I saved mention X?" and the agent searches inside your documents
 - 5 agent tools: `ima_search_files`, `ima_list_knowledge_bases`, `ima_search_knowledge_bases`, `ima_list_kb_files`, `ima_read_file`
 - One-click binding: a browser opens the ima login page, everything else is automatic
+
+**Requirements**: DeepSeek Harness **0.2.0-rc.1** (tested; other 0.2.x likely compatible) · Node.js ≥ 18 (22+ recommended) · Chrome or Edge for one-click binding (falls back to manual setup otherwise). Screenshots above use demo data.
 
 See the Chinese section above for installation steps. Licensed under MIT.
 
