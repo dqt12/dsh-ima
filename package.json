@@ -5,11 +5,11 @@
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ikevssy/dsh-ima.git"
+    "url": "https://github.com/ikevss/dsh-ima.git"
   },
-  "homepage": "https://github.com/ikevssy/dsh-ima",
+  "homepage": "https://github.com/ikevss/dsh-ima",
   "bugs": {
-    "url": "https://github.com/ikevssy/dsh-ima/issues"
+    "url": "https://github.com/ikevss/dsh-ima/issues"
   },
   "keywords": [
     "dsh",
@@ -19,7 +19,7 @@
     "plugin",
     "tencent"
   ],
-  "author": "ikevssy",
+  "author": "ikevss",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"

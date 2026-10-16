@@ -34,7 +34,7 @@
 ### 方式一：clone 到插件目录（推荐）
 
 ```bash
-git clone https://github.com/ikevssy/dsh-ima.git ~/.dsh/plugins/dsh-ima
+git clone https://github.com/ikevss/dsh-ima.git ~/.dsh/plugins/dsh-ima
 ```
 
 然后把插件挂到你的 profile 上。以 `web` 为例：
@@ -211,4 +211,4 @@ See the Chinese section above for installation steps. Licensed under MIT.
 
 ## License
 
-[MIT](./LICENSE) © 2026 ikevssy
+[MIT](./LICENSE) © 2026 ikevss
