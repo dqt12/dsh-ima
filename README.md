@@ -37,19 +37,31 @@
 
 ## 界面预览
 
-> 以下截图为**演示数据**（虚构的库名与文件名），实际界面与之一致。
+> 以下截图为**演示数据**（虚构的库名与文件名），实际界面与之一致。唯一例外：文件行的「更新时间」列目前 ima 接口不返回该字段，实际显示为空，ima 开放后无需更新插件即可自动显示。
 
-左侧浏览知识库，右侧文件按类型显示彩色徽章；网页 / 微信文章直接「打开原文」，文档类一键「引用到对话」：
+### 文件列表
 
-![知识库面板](docs/screenshots/shot-1-panel.png)
+左侧按 ima 自己的习惯分成「个人知识库 / 共享知识库」两组，可折叠，右上角「+」直达 ima 新建；知识库统一用访达同款的蓝色文件夹，文件按类型显示 macOS 风格的圆角图标（PDF 红 / Word 蓝 / Excel 绿 / 播客 粉…），行尾是操作按钮。网页 / 微信文章直接「打开原文」，文档类一键「引用到对话」：
+
+![知识库面板与文件列表](docs/screenshots/shot-1-panel.png)
+
+### 文件预览
+
+PDF / Word / Excel / PPT / 图片 / 音视频都不用跳出面板，点开直接看（Word 类文档按页渲染）；右上角可下载原文件，或一键「引用到对话」把当前文件交给 agent 读取：
+
+![文档预览](docs/screenshots/shot-5-preview.png)
+
+### 笔记排版还原
+
+ima 的笔记接口返回的是一段**展平的纯文本**，段落边界在 ima 服务端就丢了。插件按「发言人 + 时间戳」「中文序号」等锚点重建段落——会议记录能还原成一句一条的发言列表，右上角「看原文」可随时切回原始文本对照：
+
+![笔记排版还原](docs/screenshots/shot-3-detail.png)
+
+### 绑定 ima 账号
 
 一键绑定：自动弹出浏览器登录 ima，其余全自动：
 
 ![一键绑定](docs/screenshots/shot-2-bind.png)
-
-笔记类文件自动还原排版：ima 返回的是一段展平的纯文本，插件按「发言人 + 时间戳」「中文序号」等锚点重建段落，右上角可「看原文」对照；右上角「引用到对话」把当前文件直接交给 agent 读取：
-
-![详情页与引用按钮](docs/screenshots/shot-3-detail.png)
 
 没有 Chrome/Edge 时的手动兜底（每一步都告诉你去哪拿、怎么拿）：
 
@@ -304,7 +316,7 @@ npm test             # ima-client 冒烟测试
 
 **dsh-ima** connects [Tencent ima](https://ima.qq.com) knowledge bases to [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
-- Browse your ima knowledge bases from a sidebar panel (folders, file preview, colored type badges)
+- Browse your ima knowledge bases from a sidebar panel (collapsible groups, Finder-style folders, macOS-style type icons, in-panel file preview)
 - **The agent automatically knows your knowledge base exists** — a short summary is injected into the model context at the start of each turn
 - **Full-text search** — ask "does anything I saved mention X?" and the agent searches inside your documents
 - 5 agent tools: `ima_search_files`, `ima_list_knowledge_bases`, `ima_search_knowledge_bases`, `ima_list_kb_files`, `ima_read_file`
